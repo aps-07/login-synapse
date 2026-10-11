@@ -6,10 +6,8 @@ import os
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get(
-    "FLASK_SECRET_KEY",
-    "dev-only-change-this-secret-key"
-)
+
+app.secret_key = os.environ.get("SECRET-KEY")
 
 DATABASE = os.path.join(app.root_path, "users.db")
 
