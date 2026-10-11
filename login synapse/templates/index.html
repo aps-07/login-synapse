@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synapse | Smart Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+
+<body>
+    <!-- Login screen -->
+    <main id="loginPage">
+        <div class="login-layout">
+
+            <section class="brand-panel">
+                <div class="brand-logo">
+                    <span class="logo-symbol">S</span>
+                    <span>SYNAPSE</span>
+                </div>
+
+                <div class="brand-content">
+                    <span class="eyebrow">YOUR WORKSPACE, REIMAGINED</span>
+                    <h1>Everything you need.<br>
+                        <span>One smart space.</span>
+                    </h1>
+
+                    <p>
+                        A smarter way to manage your workspace,
+                        access your dashboard, and stay organized.
+                    </p>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">✦</span>
+                            <span>Personalized dashboards</span>
+                        </div>
+
+                        <div class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Role-based access</span>
+                        </div>
+
+                        <div class="feature-item">
+                            <span class="feature-icon">⌘</span>
+                            <span>Simple, secure workspace</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="brand-footer">Designed for better work.</p>
+            </section>
+
+            <section class="login-panel">
+                <div class="login-card">
+                    <div class="mobile-brand">
+                        <span class="logo-symbol">S</span>
+                        <span>SYNAPSE</span>
+                    </div>
+
+                    <div class="welcome-icon">↗</div>
+
+                    <span class="eyebrow">WELCOME BACK</span>
+                    <h2>Sign in to Synapse</h2>
+                    <p class="login-description">
+                        Enter your credentials to access your workspace.
+                    </p>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="password">Password</label>
+                                <span class="input-hint">Keep it secure</span>
+                            </div>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+
+                        <div id="message" role="alert" aria-live="polite"></div>
+
+                        <button type="submit" class="primary-btn">
+                            Sign in to your account
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </form>
+
+                    <div class="login-divider">
+                        <span>DEMO ACCESS</span>
+                    </div>
+
+                    <p class="demo-note">
+                        Use your configured demo account to explore the
+                        admin or user dashboard.
+                    </p>
+
+                    <p class="login-bottom">
+                        Synapse Workspace <span>•</span> Secure access
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Dashboard screen -->
+    <main id="dashboard" style="display: none;">
+        <header class="topbar">
+            <a href="/" class="brand-logo dashboard-brand">
+                <span class="logo-symbol">S</span>
+                <span>SYNAPSE</span>
+            </a>
+
+            <div class="topbar-right">
+                <span class="online-indicator">
+                    <span></span> Workspace
+                </span>
+
+                <button id="logoutBtn" class="logout-btn">
+                    <span aria-hidden="true">↪</span>
+                    Sign out
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <section class="dashboard-heading">
+                <div>
+                    <span class="eyebrow">YOUR WORKSPACE</span>
+                    <h1 id="welcomeMessage">Welcome back!</h1>
+                    <p id="roleMessage">
+                        Here's an overview of your dashboard.
+                    </p>
+                </div>
+
+                <div class="date-chip">
+                    <span class="date-dot"></span>
+                    Session active
+                </div>
+            </section>
+
+            <section class="overview-banner">
+                <div>
+                    <span class="banner-label">SYNAPSE WORKSPACE</span>
+                    <h2>A great day to get things done.</h2>
+                    <p>
+                        Your workspace is ready. Explore the tools
+                        available to you below.
+                    </p>
+                </div>
+
+                <div class="banner-art" aria-hidden="true">
+                    <div class="art-circle circle-one"></div>
+                    <div class="art-circle circle-two"></div>
+                    <div class="art-star">✦</div>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">OVERVIEW</span>
+                        <h2>Your dashboard</h2>
+                    </div>
+
+                    <span class="section-caption">
+                        Personalized for your role
+                    </span>
+                </div>
+
+                <div id="dashboardCards" class="dashboard-grid"></div>
+            </section>
+
+            <!-- Only visible to admin accounts -->
+            <section id="adminUsersSection"
+                     class="users-section"
+                     style="display: none;">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">ADMINISTRATION</span>
+                        <h2>Registered users</h2>
+                        <p class="section-caption">
+                            Review accounts registered in this application.
+                        </p>
+                    </div>
+
+                    <span class="admin-badge">ADMIN ONLY</span>
+                </div>
+
+                <div class="users-table-wrap">
+                    <div class="table-heading">
+                        <span>USER DIRECTORY</span>
+                        <span class="table-live">
+                            <span></span> Live data
+                        </span>
+                    </div>
+
+                    <ul id="usersList" class="users-list"></ul>
+
+                    <p id="usersMessage"
+                       class="users-message"
+                       role="status"
+                       aria-live="polite"></p>
+                </div>
+            </section>
+
+            <footer class="dashboard-footer">
+                <span>© 2026 Synapse Workspace</span>
+                <span>Built for a smarter workflow.</span>
+            </footer>
+        </div>
+    </main>
+</body>
+</html>
