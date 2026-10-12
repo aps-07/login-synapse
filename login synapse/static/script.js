@@ -1,7 +1,7 @@
 
 "use strict";
 
-// Get HTML elements
+// HTML elements
 const loginPage = document.getElementById("loginPage");
 const loginForm = document.getElementById("loginForm");
 const message = document.getElementById("message");
@@ -13,12 +13,20 @@ const dashboardCards = document.getElementById("dashboardCards");
 
 const logoutBtn = document.getElementById("logoutBtn");
 
-const adminUsersSection = document.getElementById("adminUsersSection");
+const adminUsersSection =
+    document.getElementById("adminUsersSection");
+const usersSectionEyebrow =
+    document.getElementById("usersSectionEyebrow");
+const usersSectionDescription =
+    document.getElementById("usersSectionDescription");
+const usersAccessBadge =
+    document.getElementById("usersAccessBadge");
+
 const usersMessage = document.getElementById("usersMessage");
 const usersList = document.getElementById("usersList");
 
 
-// Send requests to the Flask backend
+// Communicate with the Flask backend
 async function apiRequest(url, options = {}) {
     const response = await fetch(url, {
         ...options,
@@ -54,7 +62,15 @@ function addCard(title, description) {
 }
 
 
-// Display the correct dashboard
+// Clear the user directory
+function clearUsers() {
+    usersList.replaceChildren();
+    usersMessage.textContent = "";
+    usersMessage.className = "users-message";
+}
+
+
+// Show the correct dashboard for each role
 function showDashboard(user) {
     loginPage.style.display = "none";
     dashboard.style.display = "block";
@@ -65,35 +81,72 @@ function showDashboard(user) {
 
     dashboardCards.replaceChildren();
 
+    // Admin dashboard
     if (user.role === "admin") {
         addCard(
             "Admin Dashboard",
-            "You have administrator access to the application."
+            "You have administrator access to Synapse."
         );
 
         addCard(
-            "Manage Users",
-            "View the registered users in the system."
+            "User Directory",
+            "View all registered accounts."
+        );
+
+        addCard(
+            "Administration",
+            "Access admin-only controls."
         );
 
         adminUsersSection.style.display = "block";
-        loadUsers();
+        usersSectionEyebrow.textContent = "ADMINISTRATION";
+        usersSectionDescription.textContent =
+            "Review accounts registered in this application.";
+        usersAccessBadge.textContent = "ADMIN ACCESS";
 
-    } else {
+        loadUsers("/api/admin/users");
+    }
+
+    // Manager dashboard
+    else if (user.role === "manager") {
+        addCard(
+            "Manager Dashboard",
+            "Welcome to your manager workspace."
+        );
+
+        addCard(
+            "User Directory",
+            "View all registered users and their roles."
+        );
+
+        addCard(
+            "Team Overview",
+            "Review the accounts available in Synapse."
+        );
+
+        adminUsersSection.style.display = "block";
+        usersSectionEyebrow.textContent = "MANAGEMENT";
+        usersSectionDescription.textContent =
+            "You can view accounts but cannot access admin controls.";
+        usersAccessBadge.textContent = "VIEW ONLY";
+
+        loadUsers("/api/manager/users");
+    }
+
+    // Regular user dashboard
+    else {
         addCard(
             "User Dashboard",
-            "Welcome to your personal dashboard."
+            "Welcome to your personal workspace."
         );
 
         addCard(
             "My Profile",
-            `You are logged in with the email ${user.email}.`
+            `You are logged in with ${user.email}.`
         );
 
         adminUsersSection.style.display = "none";
-        usersList.replaceChildren();
-        usersMessage.textContent = "";
-        usersMessage.className = "";
+        clearUsers();
     }
 }
 
@@ -118,10 +171,7 @@ loginForm.addEventListener("submit", async function (event) {
     try {
         const user = await apiRequest("/api/login", {
             method: "POST",
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
+            body: JSON.stringify({ email, password })
         });
 
         showDashboard(user);
@@ -133,27 +183,25 @@ loginForm.addEventListener("submit", async function (event) {
 
     } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Login";
+        submitButton.textContent = "Sign in to your account";
     }
 });
 
 
-// Load registered users (admin only)
-async function loadUsers() {
+// Load users from the correct role-protected endpoint
+async function loadUsers(endpoint) {
+    clearUsers();
+
     usersMessage.textContent = "Loading users...";
-    usersMessage.className = "";
-    usersList.replaceChildren();
 
     try {
-        const data = await apiRequest("/api/admin/users");
-
-        usersMessage.textContent = "";
+        const data = await apiRequest(endpoint);
 
         data.users.forEach(function (user) {
             const item = document.createElement("li");
 
             const details = document.createElement("span");
-            details.textContent = `${user.email} `;
+            details.textContent = user.email;
 
             const role = document.createElement("span");
             role.className = "role-tag";
@@ -163,18 +211,18 @@ async function loadUsers() {
             usersList.appendChild(item);
         });
 
-        if (data.users.length === 0) {
-            usersMessage.textContent = "No users found.";
-        }
+        usersMessage.textContent = data.users.length === 0
+            ? "No users found."
+            : `${data.users.length} account(s) found.`;
 
     } catch (error) {
         usersMessage.textContent = error.message;
-        usersMessage.className = "error";
+        usersMessage.className = "users-message error";
     }
 }
 
 
-// Restore the session after a page refresh
+// Restore an existing session after page refresh
 async function restoreSession() {
     try {
         const user = await apiRequest("/api/me");
@@ -200,13 +248,12 @@ logoutBtn.addEventListener("click", async function () {
         loginPage.style.display = "flex";
 
         loginForm.reset();
-
         message.textContent = "";
         message.className = "";
 
-        usersList.replaceChildren();
-        usersMessage.textContent = "";
-        usersMessage.className = "";
+        adminUsersSection.style.display = "none";
+        clearUsers();
+        dashboardCards.replaceChildren();
 
     } catch (error) {
         alert(error.message);
@@ -217,5 +264,5 @@ logoutBtn.addEventListener("click", async function () {
 });
 
 
-// Start the application by checking the current session
+// Start the application
 restoreSession();
