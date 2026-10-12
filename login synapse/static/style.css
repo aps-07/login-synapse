@@ -1017,3 +1017,37 @@ a {
         animation: none !important;
     }
 }
+
+
+/* Role-based user directory improvements */
+
+#usersAccessBadge {
+    white-space: nowrap;
+}
+
+#usersList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#usersList li > span:first-child {
+    overflow-wrap: anywhere;
+}
+
+.role-tag {
+    flex-shrink: 0;
+}
+
+.users-message.error {
+    color: #dc2626;
+}
+
+@media (max-width: 520px) {
+    #usersList li {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
