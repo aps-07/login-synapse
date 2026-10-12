@@ -194,22 +194,26 @@
 
                 <div id="dashboardCards" class="dashboard-grid"></div>
             </section>
-
-            <!-- Only visible to admin accounts -->
+            
+            <!-- Visible to admin and manager accounts -->
             <section id="adminUsersSection"
-                     class="users-section"
-                     style="display: none;">
+                    class="users-section"
+                    style="display: none;">
 
                 <div class="section-heading">
                     <div>
-                        <span class="eyebrow">ADMINISTRATION</span>
+                        <span class="eyebrow" id="usersSectionEyebrow">
+                            USER DIRECTORY
+                        </span>
                         <h2>Registered users</h2>
-                        <p class="section-caption">
-                            Review accounts registered in this application.
+                        <p class="section-caption" id="usersSectionDescription">
+                            View accounts registered in this application.
                         </p>
                     </div>
 
-                    <span class="admin-badge">ADMIN ONLY</span>
+                    <span id="usersAccessBadge" class="admin-badge">
+                        ADMIN ONLY
+                    </span>
                 </div>
 
                 <div class="users-table-wrap">
@@ -223,9 +227,9 @@
                     <ul id="usersList" class="users-list"></ul>
 
                     <p id="usersMessage"
-                       class="users-message"
-                       role="status"
-                       aria-live="polite"></p>
+                    class="users-message"
+                    role="status"
+                    aria-live="polite"></p>
                 </div>
             </section>
 
