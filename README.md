@@ -1,29 +1,35 @@
-# Synapse — Role-Based Login & Dashboard
+# Synapse — Role-Based Login & Dashboard System
 
-Synapse is a web application that provides authentication and personalized dashboards based on user roles. Built using Flask and SQLite, it allows administrators and regular users to access different interfaces through a single login page.
+Synapse is a web application built with **Python, Flask, SQLite, HTML, CSS, and JavaScript**. It provides a login system with role-based dashboards for Admins, Managers, and regular Users.
+
+The project demonstrates authentication, session management, database integration, and role-based access control.
 
 ## Features
 
-* **Role-Based Authentication:** Automatically identifies Admin and User accounts after login.
-* **Admin Dashboard:** Provides access to the registered-user list.
-* **User Dashboard:** Displays a personalized dashboard for regular users.
-* **Secure Password Storage:** Uses password hashing instead of storing passwords as plain text.
-* **Session Management:** Maintains login sessions and supports logout.
-* **Access Control:** Restricts administrative endpoints to authorized administrators.
-* **Responsive UI:** Modern login page and dashboard design that adapts to different screen sizes.
+* **User Authentication:** Login and logout functionality.
+* **Role-Based Dashboards:** Different dashboard experiences for Admins, Managers, and Users.
+* **Admin Dashboard:** Access to the registered-user directory and administrative features.
+* **Manager Dashboard:** View registered users, including their roles, without admin-only permissions.
+* **User Dashboard:** A dedicated dashboard for regular users.
+* **Protected API Routes:** Backend authorization to restrict access according to user roles.
+* **SQLite Database:** Stores user account information.
+* **Responsive Interface:** Frontend built with HTML, CSS, and JavaScript.
+* **Cloud Deployment:** Configured for deployment using Render.
 
 ## Tech Stack
 
 * **Backend:** Python, Flask
-* **Frontend:** HTML5, CSS3, JavaScript
+* **Frontend:** HTML, CSS, JavaScript
 * **Database:** SQLite
-* **Authentication:** Flask sessions and Werkzeug password hashing
+* **Deployment:** Render
+* **Version Control:** Git and GitHub
 
 ## Project Structure
 
 ```text
 login-synapse/
 ├── app.py
+├── requirements.txt
 ├── users.db
 ├── templates/
 │   └── index.html
@@ -32,48 +38,96 @@ login-synapse/
     └── script.js
 ```
 
-## Getting Started
+## User Roles and Permissions
 
-1. Clone the repository:
+| Feature                    | Admin | Manager | User |
+| -------------------------- | ----- | ------- | ---- |
+| Login and logout           | Yes   | Yes     | Yes  |
+| View registered users      | Yes   | Yes     | No   |
+| Access admin-only controls | Yes   | No      | No   |
+| Access regular dashboard   | No    | No      | Yes  |
 
-   ```bash
-   git clone YOUR_REPOSITORY_URL
-   ```
+*Actual permissions depend on the backend routes and features implemented in the application.*
 
-2. Navigate to the project directory:
+## Installation and Setup
 
-   ```bash
-   cd "login synapse"
-   ```
+### 1. Clone the repository
 
-3. Install Flask:
+```bash
+git clone https://github.com/aps-07/login-synapse.git
+cd login-synapse
+```
 
-   ```bash
-   python -m pip install flask
-   ```
+### 2. Create a virtual environment
 
-4. Start the application:
+```bash
+python -m venv venv
+```
 
-   ```bash
-   python app.py
-   ```
+Activate it on Windows PowerShell:
 
-5. Open `http://127.0.0.1:5000` in your browser.
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-The application initializes the SQLite database and creates demo accounts when the database initialization code runs.
+### 3. Install dependencies
 
-## Learning Outcomes
+```bash
+pip install -r requirements.txt
+```
 
-This project demonstrates practical implementation of Flask routing, REST-style API endpoints, frontend-backend communication, SQLite database operations, password hashing, session handling, and role-based authorization.
+### 4. Configure the secret key
+
+Set a secret key in PowerShell before running the application:
+
+```powershell
+$env:SECRET_KEY = python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+Keep the secret key private. Never commit it to GitHub.
+
+### 5. Run the application
+
+```bash
+python app.py
+```
+
+Open the application in your browser:
+
+`http://127.0.0.1:5000`
+
+## Deployment on Render
+
+Synapse can be deployed as a Python web service on Render.
+
+* **Build Command:** `pip install -r requirements.txt`
+* **Start Command:** `gunicorn app:app`
+* **Environment Variable:** Configure the secret key in the Render Environment settings.
+
+After pushing code changes to GitHub, trigger a deployment on Render or wait for automatic deployment if enabled.
+
+## Security Notes
+
+* Passwords should be stored as secure hashes rather than plain text.
+* Protected API endpoints must enforce authorization on the server.
+* Secret keys and other sensitive credentials should not be committed to the repository.
+* The included SQLite database may contain local development or demonstration data; do not publish real user credentials or private data.
 
 ## Future Improvements
 
-* User registration and account management
-* Password reset functionality
-* CSRF protection and login rate limiting
-* Improved admin user-management tools
-* Deployment to a production hosting platform
+* User registration and profile management.
+* Password reset functionality.
+* Enhanced admin management controls.
+* Improved input validation and error handling.
+* Production database integration.
+* Automated testing for authentication and authorization.
 
-## Disclaimer
+## Author
 
-This is a learning project. Before production deployment, configure a strong secret key, disable Flask debug mode, and implement additional security protections.
+**Aayush Pratap Singh**
+
+GitHub: [aps-07](https://github.com/aps-07)
+
+---
+
+*Synapse — A role-based authentication and dashboard application built as a web development project.*
